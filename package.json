@@ -1,0 +1,19 @@
+{
+  "name": "ffmpeg-cluster-master",
+  "version": "0.2.0",
+  "description": "The master for managing ffmpeg-cluster: https://github.com/schizolab/ffmpeg-cluster",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schizolab/ffmpeg-cluster-master.git"
+  },
+  "author": "schizolab",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/schizolab/ffmpeg-cluster-master/issues"
+  },
+  "homepage": "https://github.com/schizolab/ffmpeg-cluster-master#readme"
+}
