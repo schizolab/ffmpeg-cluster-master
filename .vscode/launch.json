@@ -13,7 +13,8 @@
             ],
             "program": "${workspaceFolder}/index.js",
             "args": [
-                "start"
+                "start",
+                "-p 50001"
             ]
         }
     ]
