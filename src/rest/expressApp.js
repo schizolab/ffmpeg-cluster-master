@@ -1,0 +1,10 @@
+import express from 'express';
+import { statusRouter } from './router/status.js';
+
+export function createExpressApp(port) {
+    const app = express();
+
+    app.use('/status', statusRouter)
+
+    return app
+}
