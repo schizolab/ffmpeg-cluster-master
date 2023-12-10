@@ -17,7 +17,7 @@ export default function handleProgress(socket) {
             return
         }
 
-        logger.trace(`set progress: ${name} reported progress of ${progress}`)
+        logger.trace(`set progress: ${name} reported progress of ${JSON.stringify(progress)}`)
 
         // pushing progress to UI maybe
 
