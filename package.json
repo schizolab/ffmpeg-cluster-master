@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/schizolab/ffmpeg-cluster-master/issues"
   },
-  "homepage": "https://github.com/schizolab/ffmpeg-cluster-master#readme"
+  "homepage": "https://github.com/schizolab/ffmpeg-cluster-master#readme",
+  "dependencies": {
+    "commander": "^11.1.0"
+  },
+  "type": "module"
 }
