@@ -16,8 +16,8 @@ program
 program
     .command('start')
     .description('Start the server')
-    .argument('[port]', 'path to bind, default 50001')
-    .action((port = 50001) => {
+    .option('-p, --port [port]', 'path to bind, default 50001')
+    .action(({ port = 50001 }) => {
         const app = createExpressApp(port)
 
         const server = http.createServer(app)
