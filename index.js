@@ -9,13 +9,19 @@ import log4js from "./src/logging.js";
 
 const program = new Command()
 
-import { iterateOverSourceVideos } from "./src/s3/s3.js";
+import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/s3.js";
 
 (async () => {
     await iterateOverSourceVideos({
         prefix: 'numbered/video/1', // temporarily set to 1 because my hard drive is copying them right now
     }, (key) => {
-        console.log(key)
+        console.log(`source: ${key}`)
+    })
+
+    await iterateOverDestinationVideos({
+        prefix: 'thumbnail/high-res',
+    }, (key) => {
+        console.log(`destination: ${key}`)
     })
 })()
 
