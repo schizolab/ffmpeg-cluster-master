@@ -161,3 +161,9 @@ dist
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode
+
+# temporary program files
+temp/
+
+# saves DB browser for sqlite db file, not plain text, could be metadata in there
+dev_temp/
