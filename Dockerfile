@@ -21,4 +21,4 @@ COPY . .
 ENV PORT=50001
 
 # Set the entrypoint command
-ENTRYPOINT [ "node", "index.js", "start", "--port", "$PORT" ]
+ENTRYPOINT [ "node", "index.js" ]
