@@ -32,7 +32,7 @@ async function iterateOverPrefix(
                 return
             }
 
-            logger.info(`listing ${Contents.length} keys from bucket ${bucketName} with prefix ${prefix}`)
+            logger.info(`listed ${Contents.length} keys from bucket ${bucketName} with prefix ${prefix}`)
 
             for (const content of Contents) {
                 if (max > 0 && counter >= max) {
