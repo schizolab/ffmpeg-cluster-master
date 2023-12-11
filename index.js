@@ -29,8 +29,7 @@ program
             // iterate over source videos
             logger.info('checking videos in source bucket, inserting if not exists')
             await iterateOverSourceVideos({
-                prefix: 'numbered/video/',
-                max: 1000
+                prefix: 'numbered/video/'
             }, (key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
@@ -42,8 +41,7 @@ program
             // iterate over destination videos
             logger.info('checking videos in destination bucket, marking as done ifs exists')
             await iterateOverDestinationVideos({
-                prefix: 'video/',
-                max: 1000
+                prefix: 'video/'
             }, (key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
