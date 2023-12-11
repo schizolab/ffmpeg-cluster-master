@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Command } from "commander";
 
 import http from 'http'
@@ -7,6 +8,16 @@ import { attachSocket } from "./src/socket/socket.js";
 import log4js from "./src/logging.js";
 
 const program = new Command()
+
+import { iterateOverSourceVideos } from "./src/s3/s3.js";
+
+(async () => {
+    await iterateOverSourceVideos({
+        prefix: 'numbered/video/1', // temporarily set to 1 because my hard drive is copying them right now
+    }, (key) => {
+        console.log(key)
+    })
+})()
 
 program
     .name('ffmpeg cluster master')
