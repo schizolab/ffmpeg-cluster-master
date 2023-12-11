@@ -9,7 +9,7 @@ import log4js from "./src/logging.js";
 
 const program = new Command()
 
-import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/s3.js";
+import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/iteration.js";
 import { getVideo, insertVideo, markVideoStatus } from './src/tasking/db.js';
 
 program
