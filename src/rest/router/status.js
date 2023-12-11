@@ -4,7 +4,7 @@ const router = Router()
 
 router.get('/', (req, res) => {
     res.json({
-        running: true
+        remainingTasks: 123
     })
 })
 

@@ -5,6 +5,7 @@ import clientIdentities from './identity.js'
 
 import { Server } from "socket.io"
 import handleProgress from "./handler/progress.js";
+import handleName from "./handler/name.js";
 
 
 export function attachSocket(server) {
@@ -14,6 +15,9 @@ export function attachSocket(server) {
 
     io.on('connection', (socket) => {
         logger.info(`${socket.id} connected from ${socket.handshake.address}`)
+
+        // handle name
+        handleName(socket)
 
         // handle progress
         handleProgress(socket)
