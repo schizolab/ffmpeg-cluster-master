@@ -5,7 +5,7 @@ const logger = log4js.getLogger('socket')
 
 export default function handleName(socket) {
     socket.on('set name', (name, callback) => {
-        logger.trace(`set name: ${socket.id} reported name of ${name}`)
+        logger.info(`set name: ${socket.id} reported name of ${name}`)
 
         clientIdentities.set(socket.id, name)
 
