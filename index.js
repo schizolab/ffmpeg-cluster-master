@@ -29,16 +29,23 @@ program
     .description('Start the server')
     .option('-p, --port [port]', 'path to bind, default 50001')
     .action(({ port = 50001 }) => {
-        const app = createExpressApp(port)
+        // init the database
+        {
 
-        const server = http.createServer(app)
+        }
+        // start the server
+        {
+            const app = createExpressApp(port)
 
-        attachSocket(server)
+            const server = http.createServer(app)
 
-        server.listen(port, () => {
-            const logger = log4js.getLogger('rest')
-            logger.info(`master server is listening on port ${port}`)
-        })
+            attachSocket(server)
+
+            server.listen(port, () => {
+                const logger = log4js.getLogger('rest')
+                logger.info(`master server is listening on port ${port}`)
+            })
+        }
     })
 
 program.parse()
