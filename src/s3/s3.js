@@ -29,6 +29,8 @@ async function iterateOverPrefix(
     max = 0,// 0 means no limit,
     callback
 ) {
+    logger.debug(`retrieving keys from bucket ${bucketName} with prefix ${prefix}`)
+
     const command = new ListObjectsV2Command({
         Bucket: bucketName,
         Prefix: prefix,
@@ -42,7 +44,9 @@ async function iterateOverPrefix(
         while (isTruncated) {
             const { Contents, IsTruncated, NextContinuationToken } = await s3Client.send(command);
 
-            logger.trace(`retrieved ${Contents.length} keys from s3 bucket ${bucketName}`)
+            if (!Contents) {
+                return
+            }
 
             for (const content of Contents) {
                 if (max > 0 && counter >= max) {
@@ -64,7 +68,7 @@ async function iterateOverPrefix(
 export async function iterateOverSourceVideos(
     {
         prefix,
-        batch = 100,
+        batch = 1000,
         max = 0 // 0 means no limit
     },
     callback
@@ -75,7 +79,7 @@ export async function iterateOverSourceVideos(
 export async function iterateOverDestinationVideos(
     {
         prefix,
-        batch = 100,
+        batch = 1000,
         max = 0 // 0 means no limit
     },
     callback

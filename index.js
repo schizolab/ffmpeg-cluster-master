@@ -10,20 +10,7 @@ import log4js from "./src/logging.js";
 const program = new Command()
 
 import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/s3.js";
-
-(async () => {
-    await iterateOverSourceVideos({
-        prefix: 'numbered/video/1', // temporarily set to 1 because my hard drive is copying them right now
-    }, (key) => {
-        console.log(`source: ${key}`)
-    })
-
-    await iterateOverDestinationVideos({
-        prefix: 'thumbnail/high-res',
-    }, (key) => {
-        console.log(`destination: ${key}`)
-    })
-})()
+import { getVideo, insertVideo, markVideoStatus } from './src/tasking/db.js';
 
 program
     .name('ffmpeg cluster master')
@@ -34,11 +21,38 @@ program
     .command('start')
     .description('Start the server')
     .option('-p, --port [port]', 'path to bind, default 50001')
-    .action(({ port = 50001 }) => {
+    .action(async ({ port = 50001 }) => {
+        const logger = log4js.getLogger()
+
         // init the database
         {
+            // iterate over source videos
+            logger.info('checking videos in source bucket, inserting if not exists')
+            await iterateOverSourceVideos({
+                prefix: 'numbered/video/',
+                max: 1000
+            }, (key) => {
+                // check if the video is already in the database
+                const video = getVideo({ file_key: key })
+                if (!video) { // if not, insert it
+                    insertVideo({ file_key: key })
+                }
+            })
 
+            // iterate over destination videos
+            logger.info('checking videos in destination bucket, marking as done ifs exists')
+            await iterateOverDestinationVideos({
+                prefix: 'video/',
+                max: 1000
+            }, (key) => {
+                // check if the video is already in the database
+                const video = getVideo({ file_key: key })
+                if (video && video.status !== 'done') { // if exists, mark it as done
+                    markVideoStatus({ file_key: key, status: 'done' })
+                }
+            })
         }
+
         // start the server
         {
             const app = createExpressApp(port)
@@ -48,10 +62,9 @@ program
             attachSocket(server)
 
             server.listen(port, () => {
-                const logger = log4js.getLogger('rest')
                 logger.info(`master server is listening on port ${port}`)
             })
         }
     })
 
-program.parse()
+await program.parseAsync()
