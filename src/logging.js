@@ -19,6 +19,10 @@ log4js.configure({
             appenders: ['ui'],
             level: 'trace'
         },
+        s3: {
+            appenders: ['debug', 'ui'],
+            level: 'trace'
+        },
         rest: {
             appenders: ['debug', 'ui'],
             level: 'debug'
