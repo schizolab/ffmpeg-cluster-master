@@ -2,13 +2,9 @@ import log4js from "log4js";
 
 log4js.configure({
     appenders: {
-        task: {
+        money: {
             type: 'file',
-            filename: './logs/task.log',
-        },
-        debug: {
-            type: 'file',
-            filename: './logs/debug.log'
+            filename: './logs/money.log',
         },
         ui: {
             type: 'console'
@@ -20,19 +16,19 @@ log4js.configure({
             level: 'trace'
         },
         s3: {
-            appenders: ['debug', 'ui'],
+            appenders: ['money', 'ui'],
             level: 'trace'
         },
         rest: {
-            appenders: ['debug', 'ui'],
+            appenders: ['ui'],
             level: 'debug'
         },
         socket: {
-            appenders: ['debug', 'ui'],
+            appenders: ['ui'],
             level: 'trace'
         },
         task: {
-            appenders: ['task', 'debug', 'ui'],
+            appenders: ['money', 'ui'],
             level: 'info'
         }
     }
