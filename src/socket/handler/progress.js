@@ -1,7 +1,7 @@
 import log4js from "../../logging.js";
-import clientIdentities from '../identity.js'
-
 const logger = log4js.getLogger('socket')
+
+import clientIdentities from '../identity.js'
 
 export default function handleProgress(socket) {
     socket.on('set progress', ({ taskId, action, progressPercentage }) => {
