@@ -9,7 +9,9 @@ import { attachSocket } from "./src/socket/socket.js";
 import log4js from "./src/logging.js";
 
 import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/iteration.js";
-import { getVideo, insertVideo, markVideoStatus } from './src/tasking/db.js';
+import { getVideo, insertVideo, updateVideoByFileKey } from './src/db/videos.js';
+
+import { taskWatchdog } from './src/tasking/task.js';
 
 program
     .name('ffmpeg cluster master')
@@ -27,28 +29,29 @@ program
         {
             // iterate over source videos
             logger.info('checking videos in source bucket, inserting if not exists')
-            await iterateOverSourceVideos({
-                prefix: 'numbered/video/'
-            }, (key) => {
+            await iterateOverSourceVideos({}, (key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
                 if (!video) { // if not, insert it
-                    insertVideo({ file_key: key })
+                    insertVideo({ file_key: key, status: 'unprocessed' })
                 }
             })
 
             // iterate over destination videos
             logger.info('checking videos in destination bucket, marking as done ifs exists')
-            await iterateOverDestinationVideos({
-                prefix: 'video/'
-            }, (key) => {
+            await iterateOverDestinationVideos({}, (key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
-                if (video && video.status !== 'done') { // if exists, mark it as done
-                    markVideoStatus({ file_key: key, status: 'done' })
+                if (video && video.status !== 'completed') { // if exists, mark it as done
+                    updateVideoByFileKey({ file_key: key, status: 'completed' })
                 }
             })
         }
+
+        // start the task watchdog
+        setInterval(async () => {
+            await taskWatchdog()
+        }, 1000);
 
         // start the server
         {

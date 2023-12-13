@@ -1,8 +1,8 @@
 import { db } from './sqlite.js';
 
-export function insertVideo({ file_key }) {
-    const stmt = db.prepare(`INSERT INTO videos (file_key, status, created_at) VALUES (?, ?)`);
-    stmt.run(file_key, 'processing', Date.now());
+export function insertVideo({ file_key, status }) {
+    const stmt = db.prepare(`INSERT INTO videos (file_key, status, created_at) VALUES (?, ?, ?)`);
+    stmt.run(file_key, status, Date.now());
 }
 
 export function getVideo({ file_key }) {
@@ -11,14 +11,19 @@ export function getVideo({ file_key }) {
     return info;
 }
 
-// status = unprocessed, processing, complete, corrupted
 export function getVideoByStatus(status) {
     const stmt = db.prepare(`SELECT * FROM videos WHERE videos.status = ? LIMIT 1`);
     const info = stmt.get(status);
     return info;
 }
 
-export function updateVideo({ file_key, status }) {
+// status = unprocessed, processing, completed, corrupted
+export function updateVideoByFileKey({ file_key, status }) {
     const stmt = db.prepare(`UPDATE videos SET status = ? WHERE file_key = ?`);
     stmt.run(status, file_key);
+}
+
+export function updateVideoById({ id, status }) {
+    const stmt = db.prepare(`UPDATE videos SET status = ? WHERE id = ?`);
+    stmt.run(status, id);
 }

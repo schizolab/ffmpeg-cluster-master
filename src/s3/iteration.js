@@ -3,7 +3,7 @@ const logger = log4js.getLogger('s3')
 
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
-import { sourceS3Client, destinationS3Client } from "./clients.js";
+import { sourceS3Client, destinationS3Client, SOURCE_S3_PREFIX, DESTINATION_S3_PREFIX } from "./clients.js";
 
 async function iterateOverPrefix(
     s3Client,
@@ -53,22 +53,20 @@ async function iterateOverPrefix(
 
 export async function iterateOverSourceVideos(
     {
-        prefix,
         batch = 1000,
         max = 0 // 0 means no limit
     },
     callback
 ) {
-    await iterateOverPrefix(sourceS3Client, process.env.SOURCE_S3_BUCKET, prefix, batch, max, callback);
+    await iterateOverPrefix(sourceS3Client, process.env.SOURCE_S3_BUCKET, SOURCE_S3_PREFIX, batch, max, callback);
 }
 
 export async function iterateOverDestinationVideos(
     {
-        prefix,
         batch = 1000,
         max = 0 // 0 means no limit
     },
     callback
 ) {
-    await iterateOverPrefix(destinationS3Client, process.env.DESTINATION_S3_BUCKET, prefix, batch, max, callback);
+    await iterateOverPrefix(destinationS3Client, process.env.DESTINATION_S3_BUCKET, DESTINATION_S3_PREFIX, batch, max, callback);
 }

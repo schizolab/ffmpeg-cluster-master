@@ -4,22 +4,34 @@ const logger = log4js.getLogger('rest')
 import { Router } from "express";
 import { v4 as uuidv4 } from 'uuid';
 
+import { getTask, finishTask } from '../../tasking/task.js';
+
 const router = Router()
 
 // request a task
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { slaveName } = req.body
 
-    res.json({
-        id: uuidv4(),
-        downloadURL: 'https://www.youtube.com/watch?v=-tt2ZmH-3uc',
-        uploadURL: 'https://www.youtube.com/watch?v=vNazWYFKRAM',
-        options: {
-
-        }
-    })
-
     logger.info(`/task POST: ${slaveName} requested a task`)
+
+    const task = await getTask()
+
+    if (!task) {
+        logger.info(`/task POST: no tasks available for ${slaveName}`)
+        res.status(404).json({
+            error: 'no tasks available'
+        })
+        return
+    }
+
+    logger.info(`/task POST: ${slaveName} received task ${task.id}`)
+
+    res.json({
+        taskId: task.id,
+        downloadURL: task.downloadURL,
+        uploadURL: task.uploadURL,
+        options: task.options
+    })
 })
 
 // finish a task

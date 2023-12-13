@@ -17,3 +17,6 @@ export const destinationS3Client = new S3Client({
         secretAccessKey: process.env.DESTINATION_S3_SECRET_ACCESS_KEY,
     },
 });
+
+export const SOURCE_S3_PREFIX = '' || process.env.SOURCE_S3_PREFIX
+export const DESTINATION_S3_PREFIX = '' || process.env.DESTINATION_S3_PREFIX
