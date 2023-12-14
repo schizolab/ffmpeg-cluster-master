@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS "tasks" (
 	"video_id"	INTEGER NOT NULL,
 	"slave_name"	TEXT NOT NULL,
 	"status"	TEXT NOT NULL,
+	"action"	TEXT NOT NULL,
 	"progress_percentage"	INTEGER NOT NULL,
 	"last_progress_at"	INTEGER NOT NULL,
 	"created_at"	INTEGER NOT NULL,
