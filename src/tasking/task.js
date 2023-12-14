@@ -22,6 +22,7 @@ export async function getTask() {
         task_id: taskId,
         video_id: video.id,
         slave_name: 'slave1',
+        action: 'initializing',
         status: 'processing'
     });
 

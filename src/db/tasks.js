@@ -1,18 +1,19 @@
 import { db } from './sqlite.js';
 
-export function insertTask({ task_id, video_id, slave_name, status }) {
+export function insertTask({ task_id, video_id, slave_name, action, status }) {
     const stmt = db.prepare(`INSERT INTO tasks 
     (
         task_id, 
         video_id, 
         slave_name, 
+        action,
         status, 
         progress_percentage,
         last_progress_at, 
         created_at
     ) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)`);
-    stmt.run(task_id, video_id, slave_name, status, 0, Date.now(), Date.now());
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+    stmt.run(task_id, video_id, slave_name, action, status, 0, Date.now(), Date.now());
 }
 
 export function updateTask({ task_id, status, progress_percentage }) {
