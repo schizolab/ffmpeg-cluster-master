@@ -52,21 +52,21 @@ async function iterateOverPrefix(
 
 
 export async function iterateOverSourceVideos(
+    callback,
     {
         batch = 1000,
         max = 0 // 0 means no limit
-    },
-    callback
+    } = {}
 ) {
     await iterateOverPrefix(sourceS3Client, process.env.SOURCE_S3_BUCKET, SOURCE_S3_PREFIX, batch, max, callback);
 }
 
 export async function iterateOverDestinationVideos(
+    callback,
     {
         batch = 1000,
         max = 0 // 0 means no limit
-    },
-    callback
+    } = {}
 ) {
     await iterateOverPrefix(destinationS3Client, process.env.DESTINATION_S3_BUCKET, DESTINATION_S3_PREFIX, batch, max, callback);
 }

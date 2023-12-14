@@ -29,7 +29,7 @@ program
         {
             // iterate over source videos
             logger.info('checking videos in source bucket, inserting if not exists')
-            await iterateOverSourceVideos({}, (key) => {
+            await iterateOverSourceVideos((key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
                 if (!video) { // if not, insert it
@@ -39,7 +39,7 @@ program
 
             // iterate over destination videos
             logger.info('checking videos in destination bucket, marking as done ifs exists')
-            await iterateOverDestinationVideos({}, (key) => {
+            await iterateOverDestinationVideos((key) => {
                 // check if the video is already in the database
                 const video = getVideo({ file_key: key })
                 if (video && video.status !== 'completed') { // if exists, mark it as done
