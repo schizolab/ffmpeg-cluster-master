@@ -57,6 +57,7 @@ export async function taskWatchdog() {
                 // set task to failed
                 taskDB.updateTask({
                     task_id: task.task_id,
+                    action: task.action,
                     status: 'failed',
                     progress_percentage: 0
                 });
