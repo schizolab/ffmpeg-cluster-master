@@ -46,30 +46,6 @@ export async function getTask() {
     }
 }
 
-export async function finishTask({ taskId }) {
-    // get task
-    const task = taskDB.getTask({ task_id: taskId });
-
-    if (!task) {
-        throw new Error(`task ${taskId} does not exist`)
-    }
-
-    // I'm just going to trust the client has uploaded the file to the destination bucket
-
-    // update task
-    taskDB.updateTask({
-        task_id: taskId,
-        status: 'completed',
-        progress_percentage: 100
-    });
-
-    // update video
-    videosDB.updateVideoByFileKey({
-        file_key: task.file_key,
-        status: 'completed'
-    });
-}
-
 export async function taskWatchdog() {
     try {
         // get all tasks that are processing

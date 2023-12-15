@@ -18,7 +18,7 @@ export function attachSocket(server) {
         // handle disconnect
         socket.on('disconnect', (reason) => {
             // report to the tasking that this client is dead
-
+            logger.info(`${socket.id} disconnected from ${socket.handshake.address} because ${reason}`)
         })
     })
 }
