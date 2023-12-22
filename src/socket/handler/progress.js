@@ -27,11 +27,10 @@ export default function handleProgress(socket) {
             return
         }
 
-        // update task
         taskDB.updateTask({
             task_id: taskId,
             action,
-            status: progressPercentage === 100 ? 'completed' : 'processing',
+            status: 'processing',
             progress_percentage: progressPercentage
         });
 
