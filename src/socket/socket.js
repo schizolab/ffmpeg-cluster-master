@@ -3,6 +3,7 @@ const logger = log4js.getLogger('socket')
 
 import { Server } from "socket.io"
 import handleProgress from "./handler/progress.js";
+import handleResult from "./handler/result.js";
 
 export function attachSocket(server) {
     const io = new Server(server, {
@@ -12,8 +13,9 @@ export function attachSocket(server) {
     io.on('connection', (socket) => {
         logger.info(`${socket.id} connected from ${socket.handshake.address}`)
 
-        // handle progress
+        // connect handlers
         handleProgress(socket)
+        handleResult(socket)
 
         // handle disconnect
         socket.on('disconnect', (reason) => {
