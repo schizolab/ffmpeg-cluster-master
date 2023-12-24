@@ -11,6 +11,12 @@ export function getVideo({ file_key }) {
     return info;
 }
 
+export function getVideoByPrefix(prefix) {
+    const stmt = db.prepare(`SELECT * FROM videos WHERE videos.file_key LIKE ? LIMIT 1`);
+    const info = stmt.get(`${prefix}%`);
+    return info;
+}
+
 export function getVideoByStatus(status) {
     const stmt = db.prepare(`SELECT * FROM videos WHERE videos.status = ? LIMIT 1`);
     const info = stmt.get(status);

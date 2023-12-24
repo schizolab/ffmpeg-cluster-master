@@ -8,7 +8,8 @@ import { getSignedSourceURL, getSignedDestinationURL } from '../s3/presignURL.js
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { destinationS3Client, SOURCE_S3_PREFIX } from "../s3/clients.js";
+import { SOURCE_S3_PREFIX, DESTINATION_S3_PREFIX } from "../s3/clients.js";
+import { extractCleanFileName } from "../s3/utils.js";
 
 export async function getTask() {
     // get a video that is unprocessed
@@ -35,10 +36,8 @@ export async function getTask() {
     // get signed urls
     const downloadURL = await getSignedSourceURL(video.file_key);
     // destination url must remove the source prefix
-    const cleanFileName = video.file_key
-        .slice(SOURCE_S3_PREFIX.length)
-        .split('.').slice(0, -1).join('.')
-    const destinationKey = `videos/${cleanFileName}.webm`;
+
+    const destinationKey = `${DESTINATION_S3_PREFIX}${extractCleanFileName(video.file_key)}.webm`;
     const uploadURL = await getSignedDestinationURL(destinationKey);
 
     return {

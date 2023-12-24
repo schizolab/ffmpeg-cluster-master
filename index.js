@@ -9,9 +9,11 @@ import { attachSocket } from "./src/socket/socket.js";
 import log4js from "./src/logging.js";
 
 import { iterateOverSourceVideos, iterateOverDestinationVideos } from "./src/s3/iteration.js";
-import { getVideo, insertVideo, updateVideoByFileKey } from './src/db/videos.js';
+import { getVideo, getVideoByPrefix, insertVideo, updateVideoByFileKey } from './src/db/videos.js';
 
 import { taskWatchdog } from './src/tasking/task.js';
+
+import { extractFileName, extractCleanFileName } from './src/s3/utils.js';
 
 program
     .name('ffmpeg cluster master')
@@ -30,20 +32,24 @@ program
             // iterate over source videos
             logger.info('checking videos in source bucket, inserting if not exists')
             await iterateOverSourceVideos((key) => {
+                const fileName = extractFileName(key)
+
                 // check if the video is already in the database
-                const video = getVideo({ file_key: key })
+                const video = getVideo({ file_key: fileName })
                 if (!video) { // if not, insert it
-                    insertVideo({ file_key: key, status: 'unprocessed' })
+                    insertVideo({ file_key: fileName, status: 'unprocessed' })
                 }
             })
 
             // iterate over destination videos
             logger.info('checking videos in destination bucket, marking as done ifs exists')
             await iterateOverDestinationVideos((key) => {
+                const fileName = extractCleanFileName(key)
+
                 // check if the video is already in the database
-                const video = getVideo({ file_key: key })
+                const video = getVideoByPrefix(fileName)
                 if (video && video.status !== 'completed') { // if exists, mark it as done
-                    updateVideoByFileKey({ file_key: key, status: 'completed' })
+                    updateVideoByFileKey({ file_key: video.file_key, status: 'completed' })
                 }
             })
         }
