@@ -49,6 +49,7 @@ export async function getTask() {
     }
 }
 
+const WATCHDOG_INTERVAL = 20 * 1000;
 export async function taskWatchdog() {
     try {
         // get all tasks that are processing
@@ -56,7 +57,7 @@ export async function taskWatchdog() {
 
         for (const task of tasks) {
             // if task is processing for more than 5 seconds
-            if (Date.now() - task.last_progress_at > 5 * 1000) {
+            if (Date.now() - task.last_progress_at > WATCHDOG_INTERVAL) {
                 // set task to failed
                 taskDB.updateTask({
                     task_id: task.task_id,
