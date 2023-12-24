@@ -35,7 +35,10 @@ export async function getTask() {
     // get signed urls
     const downloadURL = await getSignedSourceURL(video.file_key);
     // destination url must remove the source prefix
-    const destinationKey = video.file_key.slice(SOURCE_S3_PREFIX.length);
+    const cleanFileName = video.file_key
+        .slice(SOURCE_S3_PREFIX.length)
+        .split('.').slice(0, -1).join('.')
+    const destinationKey = `videos/${cleanFileName}.webm`;
     const uploadURL = await getSignedDestinationURL(destinationKey);
 
     return {
