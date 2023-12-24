@@ -34,7 +34,8 @@ export async function getTask() {
     });
 
     // get signed urls
-    const downloadURL = await getSignedSourceURL(video.file_key);
+    const sourceKey = `${SOURCE_S3_PREFIX}${video.file_key}`;
+    const downloadURL = await getSignedSourceURL(sourceKey);
     // destination url must remove the source prefix
 
     const destinationKey = `${DESTINATION_S3_PREFIX}${extractCleanFileName(video.file_key)}.webm`;
