@@ -49,7 +49,7 @@ export async function getTask({ slaveName }) {
     }
 }
 
-const WATCHDOG_INTERVAL = 20 * 1000;
+const WATCHDOG_INTERVAL = 60 * 1000;
 export async function taskWatchdog() {
     try {
         // get all tasks that are processing
