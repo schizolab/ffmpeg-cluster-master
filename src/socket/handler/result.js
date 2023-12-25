@@ -2,6 +2,7 @@ import log4js from "../../logging.js";
 const logger = log4js.getLogger('socket')
 
 import * as taskDB from '../../db/tasks.js'
+import * as videosDB from '../../db/videos.js'
 
 export default function handleResult(socket) {
     socket.on('set result', ({ slaveName, taskId, status, message }, callback) => {
