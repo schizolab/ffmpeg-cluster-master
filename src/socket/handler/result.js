@@ -34,6 +34,12 @@ export default function handleResult(socket) {
                     status: 'failed',
                     progress_percentage: task.progress_percentage
                 });
+
+                // set video to unprocessed
+                videosDB.updateVideoById({
+                    id: task.video_id,
+                    status: 'unprocessed'
+                });
                 logger.warn(`set result: slave ${slaveName} failed task ${taskId}`)
                 break;
             default:
