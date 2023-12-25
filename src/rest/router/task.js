@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
 
     logger.info(`/task POST: ${slaveName} requested a task`)
 
-    const task = await getTask()
+    const task = await getTask({slaveName})
 
     if (!task) {
         logger.info(`/task POST: no tasks available for ${slaveName}`)

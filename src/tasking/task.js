@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SOURCE_S3_PREFIX, DESTINATION_S3_PREFIX } from "../s3/clients.js";
 import { extractCleanFileName } from "../s3/utils.js";
 
-export async function getTask() {
+export async function getTask({ slaveName }) {
     // get a video that is unprocessed
     const video = videosDB.getVideoByStatus('unprocessed');
 
@@ -22,7 +22,7 @@ export async function getTask() {
     taskDB.insertTask({
         task_id: taskId,
         video_id: video.id,
-        slave_name: 'slave1',
+        slave_name: slaveName,
         action: 'initializing',
         status: 'processing'
     });
