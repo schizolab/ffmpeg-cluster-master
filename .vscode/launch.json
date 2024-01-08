@@ -16,6 +16,16 @@
                 "start",
                 "-p 50001"
             ]
+        },
+        {
+            "name": "Launch file",
+            "program": "${file}",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}",
+            "type": "node"
         }
     ]
 }
