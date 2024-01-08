@@ -14,6 +14,8 @@ import { taskWatchdog } from './src/tasking/task.js';
 
 import { setIncludeFilePath, loadDatabaseAsync } from './src/db/init.js'
 
+import { batchUpload } from "./src/s3/upload.js";
+
 program
     .name('ffmpeg cluster master')
     .description('The master node for the ffmpeg cluster')
@@ -48,5 +50,19 @@ program
             })
         }
     })
+
+program
+    .command('upload')
+    .description('Upload files to S3')
+    .option('-i, --include-file [includeFile]', 'specify a file that contains a list of file names to upload')
+    .argument('<path>', 'folder of the files to upload')
+    .action(async (path, { includeFile }) => {
+        if (includeFile) {
+            setIncludeFilePath(includeFile)
+        }
+
+        await batchUpload(path, 'test/')
+    })
+
 
 await program.parseAsync()
