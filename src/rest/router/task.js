@@ -6,7 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { getTask } from '../../tasking/task.js';
 
+import { loadDatabaseAsync } from "../../db/init.js";
+
 const router = Router()
+
+let lastDatabaseUpdateAt = 0
+let isDatabaseUpdating = false
 
 // request a task
 router.post('/', async (req, res) => {
@@ -14,10 +19,19 @@ router.post('/', async (req, res) => {
 
     logger.info(`/task POST: ${slaveName} requested a task`)
 
-    const task = await getTask({slaveName})
+    const task = await getTask({ slaveName })
 
     if (!task) {
         logger.info(`/task POST: no tasks available for ${slaveName}`)
+
+        // actively check on the s3 indexes for new videos
+        if ((Date.now() - lastDatabaseUpdateAt > 1000) && (isDatabaseUpdating === false)) {
+            isDatabaseUpdating = true
+            await loadDatabaseAsync()
+            lastDatabaseUpdateAt = Date.now()
+            isDatabaseUpdating = false
+        }
+
         res.status(404).json({
             error: 'no tasks available'
         })
