@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { Command } from "commander";
 const program = new Command()
+import { readFileSync } from 'fs';
 
 import http from 'http'
 import { createExpressApp } from "./src/rest/expressApp.js";
@@ -24,14 +25,36 @@ program
     .command('start')
     .description('Start the server')
     .option('-p, --port [port]', 'path to bind, default 50001')
-    .action(async ({ port = 50001 }) => {
+    .option('-i, --include-file [includeFile]', 'specify a file that contains a list of file names to process')
+    .action(async ({ port = 50001, includeFile: includeFilePath }) => {
         const logger = log4js.getLogger()
 
         // init the database
         {
+            // load include file into a list of file names
+            let includeFiles = []
+            if (includeFilePath) {
+                try {
+                    includeFiles = readFileSync(includeFilePath)
+                        .toString('utf-8')
+                        .split('\n')
+                        .map((line) => line.trim())
+                } catch (error) {
+                    logger.error(`failed to load include file ${includeFilePath}`)
+                }
+            }
+
             // iterate over source videos
             logger.info('checking videos in source bucket, inserting if not exists')
             await iterateOverSourceVideos((key) => {
+                // include file check
+                if (includeFiles.length > 0) {
+                    const cleanFileName = extractCleanFileName(key)
+                    if (!includeFiles.includes(cleanFileName)) { // if not in the include file, skip
+                        return
+                    }
+                }
+
                 const fileName = extractFileName(key)
 
                 // check if the video is already in the database
