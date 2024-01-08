@@ -6,13 +6,9 @@ import { getVideo, getVideoByPrefix, insertVideo, updateVideoByFileKey } from '.
 import { extractFileName, extractCleanFileName } from '../s3/utils.js';
 import { readFileSync } from 'fs';
 
-let includeFilePath = ''
+let includeFilePath = null
 
-// check on s3 endpoint for videos to process and videos done
-// subtract videos not in the includeFiles
-// insert new videos into the database
-export async function loadDatabaseAsync() {
-    // load include file into a list of file names
+export function loadIncludeFiles() {
     let includeFiles = []
     if (includeFilePath) {
         try {
@@ -24,6 +20,16 @@ export async function loadDatabaseAsync() {
             logger.error(`failed to load include file ${includeFilePath}`)
         }
     }
+
+    return includeFiles
+}
+
+// check on s3 endpoint for videos to process and videos done
+// subtract videos not in the includeFiles
+// insert new videos into the database
+export async function loadDatabaseAsync() {
+    // load include file into a list of file names
+    const includeFiles = loadIncludeFiles()
 
     // iterate over source videos
     logger.info('checking videos in source bucket, inserting if not exists')
