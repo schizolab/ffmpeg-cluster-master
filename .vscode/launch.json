@@ -7,14 +7,31 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Master Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/index.js",
             "args": [
                 "start",
-                "-p 50001"
+                "-p 50001",
+                "-i",
+                "./temp/includes.txt"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch uploader",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js",
+            "args": [
+                "upload",
+                "-i",
+                "./temp/includes.txt",
+                "/mnt/terry/Resources/Terry/numbered/video/"
             ]
         },
         {
