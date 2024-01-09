@@ -25,7 +25,7 @@ export async function getSignedDestinationURL(key) {
         Key: key,
     });
 
-    const signedUrl = await getSignedUrl(destinationS3Client, command, { expiresIn: 3600 });
+    const signedUrl = await getSignedUrl(destinationS3Client, command, { expiresIn: 3600 * 10 });
 
     logger.debug(`generated signed upload url for ${key} : ${signedUrl}`)
 
