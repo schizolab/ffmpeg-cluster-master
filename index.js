@@ -61,7 +61,7 @@ program
             setIncludeFilePath(includeFile)
         }
 
-        await batchUpload(path, 'test/')
+        await batchUpload(path, process.env.SOURCE_S3_PREFIX)
     })
 
 
