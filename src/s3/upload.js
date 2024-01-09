@@ -14,9 +14,11 @@ export async function batchUpload(path, keyPrefix) {
 
     for (const file of files) {
         // skip if not in the include file
-        const cleanFileName = extractCleanFileName(file)
-        if (!includeFiles.includes(cleanFileName)) {
-            continue
+        if (includeFiles.length > 0) {
+            const cleanFileName = extractCleanFileName(file)
+            if (!includeFiles.includes(cleanFileName)) {
+                continue
+            }
         }
 
         // skip if file is already in s3
