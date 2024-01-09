@@ -13,6 +13,11 @@ export async function batchUpload(path, keyPrefix) {
     const includeFiles = loadIncludeFiles()
 
     for (const file of files) {
+        // skip hidden files
+        if (file.startsWith('.')) {
+            continue
+        }
+
         // skip if not in the include file
         if (includeFiles.length > 0) {
             const cleanFileName = extractCleanFileName(file)
