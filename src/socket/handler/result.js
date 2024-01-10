@@ -36,11 +36,23 @@ export default function handleResult(socket) {
                     progress_percentage: task.progress_percentage
                 });
 
-                // set video to unprocessed
-                videosDB.updateVideoById({
-                    id: task.video_id,
-                    status: 'unprocessed'
-                });
+                // check how many times this video have failed to process
+                const tasks = taskDB.getTasksByVideoId(task.video_id);
+
+                // if failed more than 3 times, set video status to corrupted
+                if (tasks.filter(task => task.status === 'failed').length > 3) {
+                    videosDB.updateVideoById({
+                        id: task.video_id,
+                        status: 'corrupted'
+                    });
+                } else {
+                    // set video to unprocessed
+                    videosDB.updateVideoById({
+                        id: task.video_id,
+                        status: 'unprocessed'
+                    });
+                }
+
                 logger.warn(`set result: slave ${slaveName} failed task ${taskId}`)
                 break;
             default:

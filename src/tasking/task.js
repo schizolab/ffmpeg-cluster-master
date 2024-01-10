@@ -71,17 +71,6 @@ export async function taskWatchdog() {
                     id: task.video_id,
                     status: 'unprocessed'
                 });
-
-                // check how many this this video have failed to process
-                const tasks = taskDB.getTasksByVideoId(task.video_id);
-
-                // if failed more than 3 times, set video status to corrupted
-                if (tasks.filter(task => task.status === 'failed').length > 3) {
-                    videosDB.updateVideoById({
-                        id: task.video_id,
-                        status: 'corrupted'
-                    });
-                }
             }
         }
     } catch (error) {
