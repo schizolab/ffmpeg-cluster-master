@@ -40,7 +40,7 @@ export async function batchUploadFiles(path) {
                     continue; // skip
                 } else {
                     // if file does not exist in s3
-                    logger.trace(`file ${file} does not exist in s3 destination bucket`)
+                    logger.trace(`file ${cleanFileName} does not exist in s3 destination bucket`)
                 }
             } catch (error) {
                 // if error, file does not exist in s3
