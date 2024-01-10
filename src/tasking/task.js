@@ -66,14 +66,37 @@ export async function taskWatchdog() {
                     progress_percentage: 0
                 });
                 logger.info(`task ${task.task_id} failed by ${task.slave_name} due to progress update watchdog`);
-                // set video to unprocessed
-                videosDB.updateVideoById({
-                    id: task.video_id,
-                    status: 'unprocessed'
-                });
+
+                // restore video to unprocessed state, mark as corrupted if failed too many times
+                restoreVideo(task.video_id);
             }
         }
     } catch (error) {
         logger.error(`taskWatchdog error: ${error}`)
+    }
+}
+
+
+const TASK_FAILURE_THRESHOLD = 3;
+export function restoreVideo(video_id) {
+    // check how many times this video have failed to process
+    const tasks = taskDB.getTasksByVideoId(video_id);
+
+    // if failed more than 3 times, set video status to corrupted
+    if (tasks.filter(task => task.status === 'failed').length > TASK_FAILURE_THRESHOLD) {
+        videosDB.updateVideoById({
+            id: video_id,
+            status: 'corrupted'
+        });
+
+        logger.warn(`restoreVideo: video ${video_id} is being marked as corrupted`)
+    } else {
+        // set video to unprocessed
+        videosDB.updateVideoById({
+            id: video_id,
+            status: 'unprocessed'
+        });
+
+        logger.info(`restoreVideo: video ${video_id} is being put back on the shelf as unprocessed`)
     }
 }

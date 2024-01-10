@@ -4,6 +4,8 @@ const logger = log4js.getLogger('socket')
 import * as taskDB from '../../db/tasks.js'
 import * as videosDB from '../../db/videos.js'
 
+import { restoreVideo } from '../../tasking/task.js'
+
 export default function handleResult(socket) {
     socket.on('set result', ({ slaveName, taskId, status, message }, callback) => {
         const task = taskDB.getTaskById(taskId)
@@ -36,22 +38,8 @@ export default function handleResult(socket) {
                     progress_percentage: task.progress_percentage
                 });
 
-                // check how many times this video have failed to process
-                const tasks = taskDB.getTasksByVideoId(task.video_id);
-
-                // if failed more than 3 times, set video status to corrupted
-                if (tasks.filter(task => task.status === 'failed').length > 3) {
-                    videosDB.updateVideoById({
-                        id: task.video_id,
-                        status: 'corrupted'
-                    });
-                } else {
-                    // set video to unprocessed
-                    videosDB.updateVideoById({
-                        id: task.video_id,
-                        status: 'unprocessed'
-                    });
-                }
+                // restore video to unprocessed state, mark as corrupted if failed too many times   
+                restoreVideo(task.video_id);
 
                 logger.warn(`set result: slave ${slaveName} failed task ${taskId}`)
                 break;
