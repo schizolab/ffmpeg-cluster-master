@@ -15,7 +15,13 @@ CREATE TABLE IF NOT EXISTS "tasks" (
 	"progress_percentage"	INTEGER NOT NULL,
 	"last_progress_at"	INTEGER NOT NULL,
 	"created_at"	INTEGER NOT NULL,
-	FOREIGN KEY("video_id") REFERENCES "videos"("id") ON DELETE CASCADE,
-	PRIMARY KEY("task_id")
+	PRIMARY KEY("task_id"),
+	FOREIGN KEY("video_id") REFERENCES "videos"("id") ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS "by_videos_status" ON "videos" (
+	"status"	ASC
+);
+CREATE INDEX IF NOT EXISTS "by_tasks_status" ON "tasks" (
+	"status"	ASC
 );
 COMMIT;
