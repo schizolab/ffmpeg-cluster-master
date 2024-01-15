@@ -14,7 +14,7 @@ import { taskWatchdog } from './src/tasking/task.js';
 
 import { setIncludeFilePath, loadDatabaseAsync } from './src/db/init.js'
 
-import { batchUpload } from "./src/s3/upload.js";
+import { batchUploadFiles } from "./src/s3/upload.js";
 
 program
     .name('ffmpeg cluster master')
@@ -61,7 +61,7 @@ program
             setIncludeFilePath(includeFile)
         }
 
-        await batchUpload(path)
+        await batchUploadFiles(path)
     })
 
 

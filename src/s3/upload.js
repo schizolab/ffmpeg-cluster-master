@@ -8,7 +8,7 @@ import { HeadObjectCommand, PutObjectCommand, ListObjectsV2Command } from "@aws-
 import { extractCleanFileName } from '../s3/utils.js';
 
 
-export async function batchUpload(path) {
+export async function batchUploadFiles(path) {
     const files = readdirSync(path)
     const includeFiles = loadIncludeFiles()
 
