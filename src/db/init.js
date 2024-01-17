@@ -57,7 +57,7 @@ export async function loadDatabaseAsync() {
         const fileName = extractCleanFileName(key)
 
         // check if the video is already in the database
-        const video = getVideoByPrefix(fileName)
+        const video = getVideoByPrefix(`${fileName}.`)
         if (video && video.status !== 'completed') { // if exists, mark it as done
             updateVideoByFileKey({ file_key: video.file_key, status: 'completed' })
         }
